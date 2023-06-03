@@ -1,15 +1,14 @@
 import { IconBrandFacebook, IconBrandGithub, IconBrandTwitter } from '@tabler/icons-react';
 import axios from 'axios';
-import { useEffect } from 'react';
-import { useRef } from 'react';
-import { useState } from 'react';
-import Button from './Components/Button';
-import Card from './Components/Card';
-import Counter from './Components/Counter';
-import Input from './Components/Input';
-import Lable from './Components/Lable';
-import PlaceContentCenter from './Components/PlaceContentCenter';
-import Todo from './Components/Todo';
+import { useEffect, useRef, useState } from 'react';
+import Button from './components/Button';
+import Card from './components/Card';
+import Counter from './components/Counter';
+import Input from './components/Input';
+import Lable from './components/Lable';
+import PlaceContentCenter from './components/PlaceContentCenter';
+import Todo from './components/Todo';
+import useJoke from './hooks/useJoke';
 
 function App(props) {
     // const type = 'submit';
@@ -178,38 +177,65 @@ function App(props) {
     // );
 
     // api consume
-    const [loading, setLoading] = useState(false)
-    const [users, setUsers] = useState([]);
+    // const [loading, setLoading] = useState(false)
+    // const [users, setUsers] = useState([]);
 
-    useEffect(() => {
-        async function getUsers() {
-            setLoading(true)
-            try {
-                const { data } = await axios('https://jsonplaceholder.typicode.com/users');
-                setUsers(data);
-                setLoading(false)
-            } catch (e) {
-                setLoading(false)
-                console.log(e);
-            }
-        }
-        getUsers().then((r) => r);
-    }, []);
+    // useEffect(() => {
+    //     async function getUsers() {
+    //         setLoading(true)
+    //         try {
+    //             const { data } = await axios('https://jsonplaceholder.typicode.com/users');
+    //             setUsers(data);
+    //             setLoading(false)
+    //         } catch (e) {
+    //             setLoading(false)
+    //             console.log(e);
+    //         }
+    //     }
+    //     getUsers().then((r) => r);
+    // }, []);
+
+    // return (
+    //     <PlaceContentCenter>
+    //         <Card>
+    //             <Card.Title>Users: {users.length}</Card.Title>
+    //             <Card.Body>
+    //                 {loading ? <div>Loading....</div> : <ol>
+    //                         {users.map((user) => (
+    //                             <li key={user.id}>
+    //                                 {user.name} ({user.username})
+    //                             </li>
+    //                         ))}
+    //                     </ol>}
+
+    //             </Card.Body>
+    //         </Card>
+    //     </PlaceContentCenter>
+    // );
+
+    // belajar hook
+
+    const nameRef = useRef();
+    const [name, setName] = useState('Biji');
+    const joke = useJoke(name);
+
+    const generateJoke = (e) => {
+        e.preventDefault();
+        setName(nameRef.current.value);
+    };
 
     return (
         <PlaceContentCenter>
             <Card>
-                <Card.Title>Users: {users.length}</Card.Title>
+                <Card.Title>Joke</Card.Title>
                 <Card.Body>
-                    {loading ? <div>Loading....</div> : <ol>
-                            {users.map((user) => (
-                                <li key={user.id}>
-                                    {user.name} ({user.username})
-                                </li>
-                            ))}
-                        </ol>}
-                    
+                    <p className={'mb-4'}>{joke.value}</p>
+
+                    <Input ref={nameRef} />
                 </Card.Body>
+                <Card.Footer>
+                    <Button onClick={generateJoke}>Generate Joke</Button>
+                </Card.Footer>
             </Card>
         </PlaceContentCenter>
     );
